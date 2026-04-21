@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: comunali-db
+    environment:
+      POSTGRES_USER: comunali
+      POSTGRES_PASSWORD: comunali
+      POSTGRES_DB: comunali
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U comunali"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    container_name: comunali-backend
+    environment:
+      DB_USER: comunali
+      DB_PASSWORD: comunali
+      DB_URL: jdbc:postgresql://postgres:5432/comunali
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
