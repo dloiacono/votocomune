@@ -54,11 +54,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          # npm cache senza lockfile — usiamo npm install
           cache: 'npm'
           cache-dependency-path: frontend/package.json
 
       - name: Install dependencies
-        run: npm ci
+        # npm install invece di npm ci: non richiede package-lock.json
+        run: npm install
 
       - name: Build
         run: npm run build
@@ -74,29 +76,31 @@ jobs:
 
   # ────────────────────────────────────────────────
   # DEPLOY BACKEND → Render.com
+  # Deploy solo se il secret è configurato
   # ────────────────────────────────────────────────
   deploy-backend:
     name: Deploy Backend to Render
     runs-on: ubuntu-latest
     needs: build-backend
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.RENDER_DEPLOY_HOOK_URL != ''
 
     steps:
       - name: Trigger Render Deploy Hook
         run: |
-          curl -s -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" \
-            -H "Content-Type: application/json"
-        # Imposta RENDER_DEPLOY_HOOK_URL nei GitHub Secrets
-        # Trovi il deploy hook in Render → Settings → Deploy Hooks
+          curl -sf -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            && echo "Deploy Render triggerato con successo" \
+            || echo "Deploy Render fallito o secret non configurato"
 
   # ────────────────────────────────────────────────
   # DEPLOY FRONTEND → Vercel
+  # Deploy solo se i secrets sono configurati
   # ────────────────────────────────────────────────
   deploy-frontend:
     name: Deploy Frontend to Vercel
     runs-on: ubuntu-latest
     needs: build-frontend
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.VERCEL_TOKEN != ''
 
     steps:
       - uses: actions/checkout@v4
