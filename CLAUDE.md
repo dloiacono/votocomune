@@ -21,6 +21,8 @@ mvn -Pnative package               # GraalVM native build
 npm install                        # Install dependencies (no lockfile)
 npm run dev                        # Vite dev server (port 5173, proxies /api → :8080)
 npm run build                      # Production build → dist/
+npm test                           # Run Vitest tests
+npm run test:watch                 # Run tests in watch mode
 npm run lint                       # ESLint
 ```
 

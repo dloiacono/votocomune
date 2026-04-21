@@ -3,6 +3,7 @@ package it.comunali.auth;
 import it.comunali.auth.dto.LoginRequest;
 import it.comunali.auth.dto.LoginResponse;
 import it.comunali.model.Utente;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;

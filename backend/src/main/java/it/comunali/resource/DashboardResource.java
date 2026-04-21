@@ -24,10 +24,10 @@ public class DashboardResource {
 
         int sezioniTotali = sezioni.size();
         int sezioniScrutinate = (int) sezioni.stream().filter(s -> s.scrutinata).count();
-        int votantiTotali = votiListe.stream().map(v -> v.votanti).distinct().mapToInt(Integer::intValue).sum();
-        int aventiDirittoTotali = sezioni.stream().mapToInt(s -> s.aventiDiritto).sum();
-        int schedeBiancheTotali = votiListe.stream().map(v -> v.schedeBianche).distinct().mapToInt(Integer::intValue).sum();
-        int schedeNulleTotali = votiListe.stream().map(v -> v.schedeNulle).distinct().mapToInt(Integer::intValue).sum();
+        int votantiTotali = votiListe.stream().map(v -> v.votanti != null ? v.votanti : 0).distinct().mapToInt(Integer::intValue).sum();
+        int aventiDirittoTotali = sezioni.stream().mapToInt(s -> s.aventiDiritto != null ? s.aventiDiritto : 0).sum();
+        int schedeBiancheTotali = votiListe.stream().map(v -> v.schedeBianche != null ? v.schedeBianche : 0).distinct().mapToInt(Integer::intValue).sum();
+        int schedeNulleTotali = votiListe.stream().map(v -> v.schedeNulle != null ? v.schedeNulle : 0).distinct().mapToInt(Integer::intValue).sum();
 
         DashboardDTO.RiepilogoDTO riepilogo = new DashboardDTO.RiepilogoDTO(
                 sezioniTotali,

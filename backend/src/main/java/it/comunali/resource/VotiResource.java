@@ -110,8 +110,14 @@ public class VotiResource {
                     votoSezione.lista = lista;
                 }
 
-                votoSezione.votiLista = votoListaReq.votiLista;
-                votoSezione.votiSindaco = votoListaReq.votiSindaco;
+                votoSezione.votiLista = votoListaReq.votiLista != null ? votoListaReq.votiLista : 0;
+                votoSezione.votiSindaco = votoListaReq.votiSindaco != null ? votoListaReq.votiSindaco : 0;
+
+                if (votoSezione.votiLista < 0 || votoSezione.votiSindaco < 0) {
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity(new ErrorResponse("I voti non possono essere negativi"))
+                            .build();
+                }
 
                 // Salva metadati votazione solo nella prima lista (per evitare duplicazione)
                 if (i == 0) {

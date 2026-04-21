@@ -27,6 +27,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Run tests
+        run: mvn -B test
+
       - name: Build with Maven
         run: mvn -B package -DskipTests -Dquarkus.package.type=uber-jar
 
@@ -61,6 +64,9 @@ jobs:
       - name: Install dependencies
         # npm install invece di npm ci: non richiede package-lock.json
         run: npm install
+
+      - name: Run tests
+        run: npm test
 
       - name: Build
         run: npm run build
