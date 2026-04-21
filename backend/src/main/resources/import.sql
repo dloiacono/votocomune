@@ -1,6 +1,6 @@
 -- Utenti
 INSERT INTO utente (id, username, password_hash, nome, cognome, email)
-VALUES (1, 'admin', '$2b$12$OcQvb7ujYBgRxjsnmqeA3O4pLLUVv2OHP5i2wL5ft07WIDyLkGBWS', 'Amministratore', 'Sistema', 'admin@comunali.app');
+VALUES (1, 'admin', '$2a$12$OcQvb7ujYBgRxjsnmqeA3O4pLLUVv2OHP5i2wL5ft07WIDyLkGBWS', 'Amministratore', 'Sistema', 'admin@comunali.app');
 
 INSERT INTO utente_profili (utente_id, profilo) VALUES (1, 'ADMIN');
 INSERT INTO utente_profili (utente_id, profilo) VALUES (1, 'GESTORE_CANDIDATI');
