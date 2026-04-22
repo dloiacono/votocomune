@@ -53,7 +53,7 @@ export default function VotiEntry() {
       return
     }
 
-    const sezione = sezioni.find(s => s.id === sezioneId)
+    const sezione = sezioni.find(s => String(s.id) === String(sezioneId))
     setSelectedSezione(sezione)
 
     try {
