@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Utente {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  nome         String
+  cognome      String
+  email        String
+  profili      String[]
+
+  @@map("utente")
+}
+
+model Sezione {
+  id            Int      @id @default(autoincrement())
+  numero        Int      @unique
+  nome          String
+  aventiDiritto Int
+  scrutinata    Boolean  @default(false)
+
+  voti       VotoSezione[]
+  preferenze PreferenzaConsigliere[]
+
+  @@map("sezione")
+}
+
+model ListaElettorale {
+  id      Int    @id @default(autoincrement())
+  numero  Int    @unique
+  nome    String
+  simbolo String
+  colore  String
+
+  consiglieri CandidatoConsigliere[]
+  voti        VotoSezione[]
+  sindaci     CandidatoSindaco[]     @relation("SindacoListe")
+
+  @@map("lista_elettorale")
+}
+
+model CandidatoSindaco {
+  id      Int     @id @default(autoincrement())
+  nome    String
+  cognome String
+  foto    String?
+
+  liste ListaElettorale[] @relation("SindacoListe")
+
+  @@map("candidato_sindaco")
+}
+
+model CandidatoConsigliere {
+  id          Int @id @default(autoincrement())
+  nome        String
+  cognome     String
+  listaId     Int
+  ordineLista Int
+
+  lista      ListaElettorale         @relation(fields: [listaId], references: [id])
+  preferenze PreferenzaConsigliere[]
+
+  @@map("candidato_consigliere")
+}
+
+model VotoSezione {
+  id            Int @id @default(autoincrement())
+  sezioneId     Int
+  listaId       Int
+  votiLista     Int
+  votiSindaco   Int
+  schedeBianche Int
+  schedeNulle   Int
+  votanti       Int
+
+  sezione Sezione         @relation(fields: [sezioneId], references: [id])
+  lista   ListaElettorale @relation(fields: [listaId], references: [id])
+
+  @@unique([sezioneId, listaId])
+  @@map("voto_sezione")
+}
+
+model PreferenzaConsigliere {
+  id            Int @id @default(autoincrement())
+  sezioneId     Int
+  consigliereId Int
+  preferenze    Int
+
+  sezione     Sezione              @relation(fields: [sezioneId], references: [id])
+  consigliere CandidatoConsigliere @relation(fields: [consigliereId], references: [id])
+
+  @@unique([sezioneId, consigliereId])
+  @@map("preferenza_consigliere")
+}
